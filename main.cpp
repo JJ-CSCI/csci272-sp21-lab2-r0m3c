@@ -16,46 +16,83 @@ double longitude;
 Compass longitudeDirection;
 
 public:
+GPS(){
+  longitude = 0;
+  latitude = 0;
+  latitudeDirection = Compass::N;
+  longitudeDirection = Compass::W;
+}
+
+GPS(double x, double a) {
+  if (((0.0 <= x) && (x <= 90.0)) && ((0.0 <= a) && (a <= 180.0))){
+  latitude = x;
+  longitude = a;
+  latitudeDirection = Compass::N;
+  longitudeDirection = Compass::W;
+  }
+  else if (((0.0 > x) || (x > 90.0)) && ((0.0 <= a) && (a <= 180.0))) {
+    latitude = 0;
+    latitudeDirection = Compass::N;
+    longitude = a;
+    longitudeDirection = Compass::W;
+  }
+  else if (((0.0 <= x) && (x <= 90.0)) && ((0.0 > a) || (a > 180.0))) {
+    latitude = x;
+    latitudeDirection = Compass::N;
+    longitude = 0;
+    longitudeDirection = Compass::W;
+  }
+  else if (((0.0 > x) || (x > 90.0)) && ((0.0 > a) || (a > 180.0))){
+    latitude = 0;
+    latitudeDirection = Compass::N;
+    longitude = 0;
+    longitudeDirection = Compass::W;
+  }
+}
+
 GPS(double x, Compass y, double a, Compass b) {
   latitude = x;
   latitudeDirection = y;
   longitude = a;
   longitudeDirection = b;
 
-  if ((0.0 <= x >= 90.0) && (0.0 <= a >= 180.0)){
-  latitudeDirection = Compass::N;
-  longitudeDirection = Compass::W;
-  }
-  if ((0.0 > x) || (x > 90.0)){
-    latitude = 0;
-    latitudeDirection = Compass::N;
-  }
-  if ((0.0 > a) || (a > 180.0)){
-    longitude = 0;
-    longitudeDirection = Compass::W;
-  }
-}
-GPS(double x, double a) {
-  if ((0.0 <= x >= 90.0) && (0.0 <= a >= 180.0)){
+  if (((0.0 <= x) && (x <= 90.0)) && ((0.0 <= a) && (a <= 180.0))){
+    if (((y == Compass::N) || (y == Compass::S)) && ((b == Compass::W) || (b == Compass::E))){
+      latitudeDirection = y;
+      longitudeDirection = b;
+    }
+    else if (((y != Compass::N) && (y != Compass::S)) && ((b == Compass::W) || (b == Compass::E))){
+      latitudeDirection = Compass::N;
+      longitudeDirection = b;
+    }
+    else if (((y == Compass::N) || (y == Compass::S)) && ((b != Compass::W) && (b != Compass::E))){
+      latitudeDirection = y;
+      longitudeDirection = Compass::W;
+    }
   latitude = x;
   longitude = a;
-  latitudeDirection = Compass::N;
-  longitudeDirection = Compass::W;
   }
-  if ((0.0 > x) || (x > 90.0)){
+
+  else if (((0.0 > x) || (x > 90.0)) && ((0.0 <= a) && (a <= 180.0))) {
     latitude = 0;
     latitudeDirection = Compass::N;
+    longitude = a;
+    longitudeDirection = Compass::W;
   }
-  if ((0.0 > a) || (a > 180.0)){
+
+  else if (((0.0 <= x) && (x <= 90.0)) && ((0.0 > a) || (a > 180.0))) {
+    latitude = x;
+    latitudeDirection = Compass::N;
     longitude = 0;
     longitudeDirection = Compass::W;
   }
-}
-GPS(){
-  longitude = 0;
-  latitude = 0;
-  latitudeDirection = Compass::N;
-  longitudeDirection = Compass::W;
+  
+  else if (((0.0 > x) || (x > 90.0)) && ((0.0 > a) || (a > 180.0))){
+    latitude = 0;
+    latitudeDirection = Compass::N;
+    longitude = 0;
+    longitudeDirection = Compass::W;
+  }
 }
 
 double getLatitude() {
